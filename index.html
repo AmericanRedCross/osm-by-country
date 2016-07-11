@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>OSM Research Visuzlization</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A Interactive Web Map to Visualize OSM Research." />
+  <!-- Google Fonts -->
+  <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+  <!-- CSS -->
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+  <link href='css/main.css' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+  <!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-header">
+        <button type="button" class="btn btn-primary btn-sm navbar-toggle" data-toggle="offcanvas" data-target=".navbar-collapse">
+            <span><i class="glyphicon glyphicon-chevron-left"></i><span>
+        </button>
+        <a class="navbar-brand" href="#">OSM Research Viz</a>
+      </div>
+  </div><!-- END NAVBAR -->
+
+  <!-- SIDEBAR -->
+  <div class="row-offcanvas row-offcanvas-left">
+    <div id="sidebar" class="sidebar-offcanvas">
+        <div class="col-md-12">
+          <h3>Sidebar (fixed)</h3>
+          <div class="row" id="text-about">
+            <div class="col-md-12">
+              <p>'Oh, PLEASE mind what you're doing!' cried Alice, jumping up and down in  an agony of terror. 'Oh, there goes his PRECIOUS nose'; as an unusually  large saucepan flew close by it, and very nearly carried it off.</p>
+              <p>'If everybody minded their own business,' the Duchess said in a hoarse  growl, 'the world would go round a deal faster than it does.'</p>
+              <p>'Which would NOT be an advantage,' said Alice, who felt very glad to get  an opportunity of showing off a little of her knowledge. 'Just think of  what work it would make with the day and night! You see the earth takes  twenty-four hours to turn round on its axis&mdash;'</p>
+          </div>
+          </div>
+          <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#">Population</a></li>
+            <li><a href="#">Population Density</a></li>
+            <li><a href="#">Area</a></li>
+            <li><a href="#">Geofabrik Extract Size</a></li>
+            <li><a href="#">Roads Mapped (km)</a></li>
+            <li><a href="#">Number of Buildings Mapped</a></li>
+          </ul>
+        </div><!-- END SIDEBAR -->
+    </div>
+
+    <!-- MAIN PAGE CONTENT: MAP -->
+    <div id="main">
+        <div class="col-md-12" id="map"></div>
+    </div><!-- END MAIN CONTENT -->
+  </div><!-- END OFF-CANVAS ROW -->
+
+  <!-- LOAD SCRIPTS -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="js/responsive.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>
