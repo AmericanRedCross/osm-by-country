@@ -22,7 +22,17 @@ function getNumber(str){
   return (isNaN(parseFloat(str))) ? 0 : parseFloat(str);
 }
 
+// Use Leaflet to implement a D3 geometric transformation.
+function projectPoint(x, y) {
+  var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  this.stream.point(point.x, point.y);
+}
+
+var transform = d3.geo.transform({point: projectPoint}),
+    path = d3.geo.path().projection(transform);
+
 //* ALL THE D3 STUFF IS HAPPENING HERE */
+
 //global variables
 var svg, world, countryData, rows, worldgeodata;
 
@@ -43,38 +53,53 @@ function getData(){
 
     //set the color quantize scale's input domain
     color.domain([
-      d3.min(data, function(d){ return d.population ;}),
-      d3.max(data, function(d){ return d.population ;}),
+      d3.min(data, function(d){ return d.areaSqKm ;}),
+      d3.max(data, function(d){ return d.areaSqKm ;}),
     ])
 
     //load in geoJSON data
-    d3.json("data/admin0_countries.json", function(error, world) {
+    d3.json("data/admin0_countries.json", function(error, countries) {
+
+    world = countries;
 
     for(var i=0; i < data.length; i++){
-      //grab iso3 name
-      var dataCountry = data[i].iso3;
-      //grab number of hot tasks
-      var countryPop = getNumber(data[i].population);
+      var csv_iso3 = data[i].iso3;
+      var pop = getNumber(data[i].population);
+      var popdensity = getNumber(data[i].popDensity);
+      var area = getNumber(data[i].areaSqKm);
+      var geoExtract = getNumber(data[i].geofabrikExtract);
+      var roads = getNumber(data[i].roadsMappedKm);
+      var buildings = getNumber(data[i].buildingsMapped);
 
       //find corresponding iso3 inside the GeoJSON
       for(var j=0; j < world.features.length; j++){
         var jsonCountry = world.features[j].properties.iso_a3;
 
-        if(dataCountry == jsonCountry) {
+        if(csv_iso3 == jsonCountry) {
           //copy data value into the json
-          world.features[j].properties.popValue = countryPop;
+          world.features[j].properties.population = pop;
+          world.features[j].properties.popdensity = popdensity;
+          world.features[j].properties.areaSqKm = area;
+          world.features[j].properties.geofabrikExtract = geoExtract;
+          world.features[j].properties.roadsMapped = roads;
+          world.features[j].properties.buildingsMapped = buildings;
+
         }
       }
     }
+    console.log(world);
 
-    //#HOT Tasks Chloropleth
+    //population Chloropleth
+    var areachloro = g.selectAll("path")
+        .data(world.features)
+        .enter().append("path");
+
     var popchloro = g.selectAll("path")
       .data(world.features)
-      .enter().append("path")
-    console.log(world.features);
+      .enter().append("path");
 
-    var transform = d3.geo.transform({point: projectPoint}),
-        path = d3.geo.path().projection(transform);
+
+    //console.log(world.features);
 
     map.on("viewreset", reset);
 
@@ -93,25 +118,42 @@ function getData(){
 
       g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
-      popchloro.attr("d", path)
+      areachloro.attr("d", path)
+      .style("fill", function(d) {
+        var value = d.properties.areaSqKm;
+        if(value) {
+          //if a value exists...
+          return color(value);
+        } else{
+          return "#000";
+        }
+        });
+      }
+
+    function areareset() {
+      var bounds = path.bounds(world),
+          topLeft = bounds[0],
+          bottomRight = bounds[1];
+
+      svg .attr("width", bottomRight[0] - topLeft[0])
+          .attr("height", bottomRight[1] - topLeft[1])
+          .style("left", topLeft[0] + "px")
+          .style("top", topLeft[1] + "px");
+
+      g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+      areachloro.attr("d", path)
       .style("fill", function(d) {
         var value = d.properties.popValue;
         if(value) {
           //if a value exists...
           return color(value);
         } else{
-          return "blue";
+          return "#000";
         }
-    });
+        });
+      }
 
-
-    }
-
-    // Use Leaflet to implement a D3 geometric transformation.
-    function projectPoint(x, y) {
-      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-      this.stream.point(point.x, point.y);
-    }
 
     });
 

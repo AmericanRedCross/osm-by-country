@@ -47,13 +47,14 @@ svg {
 
 
 path {
-  fill-opacity: .2;
+  fill-opacity: 0.7;
   stroke: #fff;
   stroke-width: 1.5px;
 }
 
 path:hover {
-  fill-opacity: .7;
+  fill: #fff;
+  fill-opacity: .5;
 }
 
 /* num Hot tasks chloro color ramp
