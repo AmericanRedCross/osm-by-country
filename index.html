@@ -9,7 +9,7 @@
   <!-- Google Fonts -->
   <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
   <!-- CSS -->
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+  <link rel="stylesheet" href="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.css" />
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
   <link href='css/main.css' rel='stylesheet' type='text/css'>
 
@@ -38,18 +38,19 @@
           </div>
           </div>
           <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="#">Population</a></li>
-            <li><a href="#">Population Density</a></li>
-            <li><a href="#">Area</a></li>
-            <li><a href="#">Geofabrik Extract Size</a></li>
-            <li><a href="#">Roads Mapped (km)</a></li>
-            <li><a href="#">Number of Buildings Mapped</a></li>
+            <li class="active" id="population"><a data-toggle="tab" onclick="colorMap('population')">Population</a></li>
+            <li id="popDensity"><a data-toggle="tab" onclick="colorMap('popDensity')">Population Density</a></li>
+            <li id="areaSqKm"><a data-toggle="tab" onclick="colorMap('areaSqKm')">Area</a></li>
+            <li id="geofabrikExtract"><a data-toggle="tab" onclick="colorMap('geofabrikExtract')">Geofabrik Extract Size</a></li>
+            <li id="roadsMappedKm"><a data-toggle="tab" onclick="colorMap('roadsMappedKm')">Roads Mapped (km)</a></li>
+            <li id="buildingsMapped"><a data-toggle="tab" onclick="colorMap('buildingsMapped')">Number of Buildings Mapped</a></li>
           </ul>
         </div><!-- END SIDEBAR -->
     </div>
 
     <!-- MAIN PAGE CONTENT: MAP -->
     <div id="main">
+        <div id="tooltip"></div>
         <div class="col-md-12" id="map"></div>
     </div><!-- END MAIN CONTENT -->
   </div><!-- END OFF-CANVAS ROW -->
@@ -57,8 +58,9 @@
   <!-- LOAD SCRIPTS -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
   <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="//d3js.org/queue.v1.min.js"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="js/responsive.js"></script>
   <script src="js/site.js"></script>

@@ -57,6 +57,20 @@ path:hover {
   fill-opacity: .5;
 }
 
+#tooltip {
+    position:absolute;
+    z-index:999;
+    font-size:14px;
+    color: #1a1a1a;
+    background-color: rgba(245,245,245,1);
+    border-radius: 3px;
+    padding: 4px 6px;
+    max-width: 300px;
+}
+#tooltip:empty {
+    display:none;
+}
+
 /* num Hot tasks chloro color ramp
 ["#fef0d9","#fdcc8a","#fc8d59","#e34a33","#b30000"]
 */

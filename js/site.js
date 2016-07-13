@@ -15,7 +15,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 		'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	id: 'mapbox.streets'
 }).addTo(map);
-/* END LEAFLET MAP SETUP */
+
 
 //parse string function
 function getNumber(str){
@@ -31,32 +31,45 @@ function projectPoint(x, y) {
 var transform = d3.geo.transform({point: projectPoint}),
     path = d3.geo.path().projection(transform);
 
+    map._initPathRoot()
+
+// tooltip follows cursor
+$(document).ready(function() {
+    $('body').mouseover(function(e) {
+        //Set the X and Y axis of the tooltip
+        $('#tooltip').css('top', e.pageY + 10 );
+        $('#tooltip').css('left', e.pageX + 20 );
+    }).mousemove(function(e) {
+        //Keep changing the X and Y axis for the tooltip, thus, the tooltip move along with the mouse
+        $("#tooltip").css({top:(e.pageY+15)+"px",left:(e.pageX+20)+"px"});
+    });
+});
+
+/* END LEAFLET MAP SETUP */
+
 //* ALL THE D3 STUFF IS HAPPENING HERE */
 
 //global variables
-var svg, world, countryData, rows, worldgeodata;
+var world, csv, selectedChloro;
 
 //set up svg
-var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+var svg = d3.select('#map').select("svg"),
+    g = svg.append("g").attr("id", "countries");
 
 //quantize scale
-//["#fef0d9","#fdcc8a","#fc8d59","#e34a33","#b30000"]
 var color = d3.scale.quantize()
     .range(["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"]);
 
-//call first function to get data from
-getData();
-//get osm data
+//queue data, await getData function
+queue()
+  .defer(d3.csv, "data/OSM_research_qgis.csv")
+  .defer(d3.json, "data/admin0_countries.json")
+  .await(getData);
+
+//get OSM & JSON data
 function getData(){
   d3.csv("data/OSM_research_qgis.csv", function(data){
-
-    //set the color quantize scale's input domain
-    color.domain([
-      d3.min(data, function(d){ return d.areaSqKm ;}),
-      d3.max(data, function(d){ return d.areaSqKm ;}),
-    ])
-
+    csv = data;
     //load in geoJSON data
     d3.json("data/admin0_countries.json", function(error, countries) {
 
@@ -78,84 +91,66 @@ function getData(){
         if(csv_iso3 == jsonCountry) {
           //copy data value into the json
           world.features[j].properties.population = pop;
-          world.features[j].properties.popdensity = popdensity;
+          world.features[j].properties.popDensity = popdensity;
           world.features[j].properties.areaSqKm = area;
           world.features[j].properties.geofabrikExtract = geoExtract;
-          world.features[j].properties.roadsMapped = roads;
+          world.features[j].properties.roadsMappedKm = roads;
           world.features[j].properties.buildingsMapped = buildings;
 
         }
       }
     }
-    console.log(world);
-
-    //population Chloropleth
-    var areachloro = g.selectAll("path")
-        .data(world.features)
-        .enter().append("path");
-
-    var popchloro = g.selectAll("path")
-      .data(world.features)
-      .enter().append("path");
 
 
-    //console.log(world.features);
+    makeMap();
 
-    map.on("viewreset", reset);
-
-    reset();
-
-    // Reposition the SVG to cover the features.
-    function reset() {
-      var bounds = path.bounds(world),
-          topLeft = bounds[0],
-          bottomRight = bounds[1];
-
-      svg .attr("width", bottomRight[0] - topLeft[0])
-          .attr("height", bottomRight[1] - topLeft[1])
-          .style("left", topLeft[0] + "px")
-          .style("top", topLeft[1] + "px");
-
-      g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-      areachloro.attr("d", path)
-      .style("fill", function(d) {
-        var value = d.properties.areaSqKm;
-        if(value) {
-          //if a value exists...
-          return color(value);
-        } else{
-          return "#000";
-        }
-        });
-      }
-
-    function areareset() {
-      var bounds = path.bounds(world),
-          topLeft = bounds[0],
-          bottomRight = bounds[1];
-
-      svg .attr("width", bottomRight[0] - topLeft[0])
-          .attr("height", bottomRight[1] - topLeft[1])
-          .style("left", topLeft[0] + "px")
-          .style("top", topLeft[1] + "px");
-
-      g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-      areachloro.attr("d", path)
-      .style("fill", function(d) {
-        var value = d.properties.popValue;
-        if(value) {
-          //if a value exists...
-          return color(value);
-        } else{
-          return "#000";
-        }
-        });
-      }
-
-
+    //console.log(id);
+    //setDomain(data, id);
     });
-
   });
 }
+
+
+function makeMap(){
+  //console.log(id);
+
+
+  selectedChloro = g.selectAll("path")
+    .data(world.features)
+    .enter().append("path")
+    .attr("d", path)
+
+  function reset() {
+    selectedChloro.attr("d", path);
+  }
+
+  map.on("viewreset", reset);
+  colorMap("population");
+}
+
+function colorMap(id){
+  color.domain([
+    d3.min(csv, function(d){ return d[id] ;}),
+    d3.max(csv, function(d){ return d[id] ;})
+  ])
+
+  selectedChloro.style("fill", function(d) {
+    var value = d.properties[id];
+    //console.log(value);
+    if(value) {
+      //if a value exists...
+      //console.log(value);
+      return color(value);
+    } else{
+      return "#000";
+    }
+  })
+
+    .on("mouseover", function(d){
+      var tooltipText = id + ": " + d.properties[id];
+      $("#tooltip").html(tooltipText);
+    })
+    .on("mouseout", function(d){
+      $('#tooltip').empty();
+    });
+  }//end colormap();
