@@ -52,6 +52,15 @@ $(document).ready(function() {
 //global variables
 var world, csv, selectedChloro;
 
+// global object to convert ids to human readable strings
+var readId = new Object();
+readId.population = "Population";
+readId.popDensity = "Population Density";
+readId.areaSqKm = "Area (km^2)";
+readId.geofabrikExtract = "Geofabrik Extract Size (MB)";
+readId.roadsMappedKm = "Roads Mapped (km)";
+readId.buildingsMapped = "Buildings Mapped";
+
 //set up svg
 var svg = d3.select('#map').select("svg"),
     g = svg.append("g").attr("id", "countries");
@@ -104,16 +113,12 @@ function getData(){
 
     makeMap();
 
-    //console.log(id);
-    //setDomain(data, id);
     });
   });
-}
-
+}/* END GETDATA */
 
 function makeMap(){
   //console.log(id);
-
 
   selectedChloro = g.selectAll("path")
     .data(world.features)
@@ -126,7 +131,7 @@ function makeMap(){
 
   map.on("viewreset", reset);
   colorMap("population");
-}
+} /* END MAKEMAP */
 
 function colorMap(id){
   color.domain([
@@ -147,10 +152,10 @@ function colorMap(id){
   })
 
     .on("mouseover", function(d){
-      var tooltipText = id + ": " + d.properties[id];
+      var tooltipText = readId[id] + ": " + d.properties[id];
       $("#tooltip").html(tooltipText);
     })
     .on("mouseout", function(d){
       $('#tooltip').empty();
     });
-  }//end colormap();
+  }/* END COLORMAP */
