@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-primary btn-sm navbar-toggle" data-toggle="offcanvas" data-target=".navbar-collapse">
             <span><i class="glyphicon glyphicon-chevron-left"></i><span>
         </button>
-        <a class="navbar-brand" href="#">OSM Research Viz</a>
+        <a class="navbar-brand" href="#">OSM Research Visualization</a>
       </div>
   </div><!-- END NAVBAR -->
 
@@ -29,21 +29,24 @@
   <div class="row-offcanvas row-offcanvas-left">
     <div id="sidebar" class="sidebar-offcanvas">
         <div class="col-md-12">
-          <h3>Sidebar (fixed)</h3>
+          <h3>The State of OpenStreetMap Data</h3>
           <div class="row" id="text-about">
             <div class="col-md-12">
-              <p>'Oh, PLEASE mind what you're doing!' cried Alice, jumping up and down in  an agony of terror. 'Oh, there goes his PRECIOUS nose'; as an unusually  large saucepan flew close by it, and very nearly carried it off.</p>
-              <p>'If everybody minded their own business,' the Duchess said in a hoarse  growl, 'the world would go round a deal faster than it does.'</p>
-              <p>'Which would NOT be an advantage,' said Alice, who felt very glad to get  an opportunity of showing off a little of her knowledge. 'Just think of  what work it would make with the day and night! You see the earth takes  twenty-four hours to turn round on its axis&mdash;'</p>
+              <p>Created by interns for the American Red Cross' GIS team, this site provides the user with some idea of the 'completeness' of the OSM map of the world. </p>
+              <p>The data has been visualized by utilizing multiple chloropleth maps, each with a five class color scheme that is automatically quantized using d3.js.</p>
+              <p>To switch maps, simply select one of the options below. To view more detailed information about each country, simple hover your cursor over the country of interest to you.</p>
           </div>
           </div>
           <ul class="nav nav-pills nav-stacked">
-            <li class="active" id="population"><a data-toggle="tab" onclick="colorMap('population')">Population</a></li>
+            <li class="active" id="buildingsMapped"><a data-toggle="tab" onclick="colorMap('buildingsMapped')">Number of Buildings Mapped</a></li>
+            <li id="popPerBuilding"><a data-toggle="tab" onclick="colorMap('popPerBuilding')">Population per Building</a></li>
+            <li id="roadsMappedKm"><a data-toggle="tab" onclick="colorMap('roadsMappedKm')">Roads Mapped (km)</a></li>
+            <li id="numHotTasks"><a data-toggle="tab" onclick="colorMap('numHotTasks')">Number of HOT Tasks</a></li>
+            <li id="geofabrikExtract"><a data-toggle="tab" onclick="colorMap('geofabrikExtract')">Geofabrik Extract Size</a></li>
+            <li id="popPerExtract"><a data-toggle="tab" onclick="colorMap('popPerExtract')">Population per MB of Geofabrik Extract</a></li>
+            <li id="areaPerExtract"><a data-toggle="tab" onclick="colorMap('areaPerExtract')">Area per MB of Geofabrik Exract</a></li>
             <li id="popDensity"><a data-toggle="tab" onclick="colorMap('popDensity')">Population Density</a></li>
             <li id="areaSqKm"><a data-toggle="tab" onclick="colorMap('areaSqKm')">Area</a></li>
-            <li id="geofabrikExtract"><a data-toggle="tab" onclick="colorMap('geofabrikExtract')">Geofabrik Extract Size</a></li>
-            <li id="roadsMappedKm"><a data-toggle="tab" onclick="colorMap('roadsMappedKm')">Roads Mapped (km)</a></li>
-            <li id="buildingsMapped"><a data-toggle="tab" onclick="colorMap('buildingsMapped')">Number of Buildings Mapped</a></li>
           </ul>
         </div><!-- END SIDEBAR -->
     </div>
@@ -59,7 +62,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
-  <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="https://d3js.org/d3.v4.js"></script>
   <script src="//d3js.org/queue.v1.min.js"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="js/responsive.js"></script>
