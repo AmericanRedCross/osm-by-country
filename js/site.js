@@ -192,7 +192,7 @@ function colorMap(id){
   })
 
     .on("mouseover", function(d){
-      var tooltipText = "<strong>" + d.properties.country + "</strong>" + "<br>" + "Rank: " + d.properties.rankById + "<br>" + readId[id] + ": " + commas(d.properties[id]);   //id corresponds to property name in global object readId
+      var tooltipText = "<strong>" + d.properties.country + "</strong>" + "<br>" + "Rank: " + d.properties.rankById + "<br>" + readId[id] + ": " + commas(decimal(d.properties[id]));   //id corresponds to property name in global object readId
       $("#tooltip").html(tooltipText);
     })
     .on("mouseout", function(d){
