@@ -48,11 +48,9 @@ $(document).ready(function() {
 /* END LEAFLET MAP SETUP */
 
 //* ALL THE D3 STUFF IS HAPPENING HERE */
-var commas = d3.format(",");
-var decimal = d3.format(".3n");
+var formatNum = d3.format(",.0f");
 //global variables
 var world, csv, selectedChloro, currentRank, rank;
-var rankingArray = new Object();
 
 // global object to convert ids to human readable strings
 var readId = {
@@ -192,7 +190,7 @@ function colorMap(id){
   })
 
     .on("mouseover", function(d){
-      var tooltipText = "<strong>" + d.properties.country + "</strong>" + "<br>" + "Rank: " + d.properties.rankById + "<br>" + readId[id] + ": " + commas(decimal(d.properties[id]));   //id corresponds to property name in global object readId
+      var tooltipText = "<strong>" + d.properties.country + "</strong>" + "<br>" + "Rank: " + d.properties.rankById + "<br>" + readId[id] + ": " + formatNum(d.properties[id]);   //id corresponds to property name in global object readId
       $("#tooltip").html(tooltipText);
     })
     .on("mouseout", function(d){
